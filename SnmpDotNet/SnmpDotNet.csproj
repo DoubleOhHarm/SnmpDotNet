@@ -10,6 +10,9 @@
     <Authors>Nam Hoang</Authors>
     <Company />
     <Description>another SNMP Library based on AsnWriter and AsnReader</Description>
+    <PackageProjectUrl>https://github.com/namhtpyn/SnmpDotNet</PackageProjectUrl>
+    <Copyright>Nam Hoang</Copyright>
+    <RepositoryUrl>https://github.com/namhtpyn/SnmpDotNet</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
