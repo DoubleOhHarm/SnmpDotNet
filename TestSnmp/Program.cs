@@ -10,9 +10,9 @@ namespace TestSnmp // Note: actual namespace depends on the project name.
 {
     public class Program
     {
-        public static string deviceIp = "123.29.45.15";
+        public static string deviceIp = "";
         public static ushort port = 161;
-        public static string community = "c1sc0vnpt";
+        public static string community = "";
         public static async Task Main(string[] args)
         {
             var value = "\b\u0002\u0001\u0000";
