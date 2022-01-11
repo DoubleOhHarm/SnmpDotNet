@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>$(VersionPrefix)1.4.3</Version>
+    <Version>$(VersionPrefix)1.4.4</Version>
     <Authors>Nam Hoang</Authors>
     <Company />
     <Description>another SNMP Library based on AsnWriter and AsnReader</Description>

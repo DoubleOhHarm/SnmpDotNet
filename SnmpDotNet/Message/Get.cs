@@ -31,7 +31,8 @@
             //start varbindlist
             encoder.PushSequence();
 
-            encoder.WriteEncodedValue(Oids.SelectMany(oid => new Encoder().PushSequence().WriteOid(oid).WriteNull().PopSequence().Encode()).ToArray());
+            Oids.Select(oid => new Encoder().PushSequence().WriteOid(oid).WriteNull().PopSequence().Encode()).ToList().ForEach(b => encoder.WriteEncodedValue(b));
+
 
             encoder.PopSequence();
             //end varbindlist
