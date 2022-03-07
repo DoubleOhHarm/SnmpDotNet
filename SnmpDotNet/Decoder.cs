@@ -32,7 +32,15 @@ namespace SnmpDotNet
         }
         public int ReadInt32(SnmpTag? tag = null)
         {
-            if (_reader.TryReadInt32(out int result, tag?.GetTag())) return result;
+            try
+            {
+                if (_reader.TryReadInt32(out int result, tag?.GetTag())) return result;
+                
+            }
+            catch (AsnContentException e)
+            {
+                return BitConverter.ToInt32(_reader.PeekContentBytes().ToArray().Reverse().ToArray());
+            }
             throw new DecodeFailedException();
         }
         public uint ReadUInt32(SnmpTag? tag = null)

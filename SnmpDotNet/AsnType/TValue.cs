@@ -1,4 +1,6 @@
-﻿namespace SnmpDotNet.AsnType
+﻿using SnmpDotNet.Exceptions;
+
+namespace SnmpDotNet.AsnType
 {
     public class TValue
     {
@@ -42,6 +44,9 @@
             if (Tag == SnmpTag.Oid) return ToOid().Value;
             if (Tag == SnmpTag.TimeTicks) return ToTimeTicks().Value;
             if (Tag == SnmpTag.Unsigned32) return ToUnsigned32().Value;
+            if (Tag == SnmpTag.NoSuchInstance) throw new NoSuchInstanceException();
+
+
             return Bytes;
         }
 
