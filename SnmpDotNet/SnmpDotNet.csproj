@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -13,6 +13,7 @@
     <PackageProjectUrl>https://github.com/namhtpyn/SnmpDotNet</PackageProjectUrl>
     <Copyright>Nam Hoang</Copyright>
     <RepositoryUrl>https://github.com/namhtpyn/SnmpDotNet</RepositoryUrl>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>

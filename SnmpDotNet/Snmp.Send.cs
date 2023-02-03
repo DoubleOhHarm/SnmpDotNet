@@ -6,36 +6,47 @@ namespace SnmpDotNet
 {
 	public partial class Snmp
 	{
-		private static async Task<byte[]> Send(byte[] bytes, string ip, ushort port, TimeSpan timeout, ushort retries)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="bytes"></param>
+		/// <param name="ipEndPoint"></param>
+		/// <param name="timeout"></param>
+		/// <param name="retries"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		/// <exception cref="Exceptions.SnmpTimeoutException"></exception>
+		private static async Task<byte[]> SendAsync(byte[] bytes, IPEndPoint ipEndPoint, TimeSpan timeout, ushort retries, CancellationToken cancellationToken)
 		{
-			UdpClient? udp = null;
-			try
+			if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+			if (ipEndPoint == null) throw new ArgumentNullException(nameof(ipEndPoint));
+
+			using CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			using UdpClient udpClient = new UdpClient();
+
+			for (int i = 0; i <= retries; i++)
 			{
-				udp = new();
-				for (int i = 0; i <= retries; i++)
+				try
 				{
-					try
-					{
-						await udp.SendAsync(bytes, new IPEndPoint(IPAddress.Parse(ip), port), new CancellationTokenSource(timeout).Token);
-						UdpReceiveResult result = await udp.ReceiveAsync(new CancellationTokenSource(timeout).Token);
-						return result.Buffer;
-					}
-					catch (OperationCanceledException)
-					{
-						if (i == retries) throw new Exceptions.SnmpTimeoutException();
-						else continue;
-					}
+					linkedTokenSource.CancelAfter(timeout);
+					await udpClient
+						.SendAsync(bytes, ipEndPoint, linkedTokenSource.Token)
+						.ConfigureAwait(false);
+
+					linkedTokenSource.CancelAfter(timeout);
+					UdpReceiveResult result = await udpClient
+						.ReceiveAsync(linkedTokenSource.Token)
+						.ConfigureAwait(false);
+
+					return result.Buffer;
+				}
+				catch (OperationCanceledException)
+				{
+					if (i == retries) throw new Exceptions.SnmpTimeoutException();
 				}
 			}
-			finally
-			{
-				if (udp != null)
-				{
-					udp.Close();
-					udp.Dispose();
-				}
-			}
-			return new byte[] { };
+
+			return Array.Empty<byte>();
 		}
 
 		private static void ThrowIfError(SnmpError status, uint errorIndex)
