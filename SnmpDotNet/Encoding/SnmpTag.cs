@@ -2,7 +2,7 @@
 using System.Formats.Asn1;
 using System.Text.Json.Serialization;
 
-namespace SnmpDotNet
+namespace SnmpDotNet.Encoding
 {
     //http://intronetworks.cs.luc.edu/current/html/netmgmt1.html#snmp-and-asn-1-encoding
     //https://cdpstudio.com/manual/cdp/snmpio/about-snmp.html
@@ -48,7 +48,7 @@ namespace SnmpDotNet
         }
         public override bool Equals([NotNullWhen(true)] object? obj)
         {
-            return obj is SnmpTag && Equals((SnmpTag)obj);
+            return obj is SnmpTag && Equals((SnmpTag) obj);
         }
         public override int GetHashCode()
         {

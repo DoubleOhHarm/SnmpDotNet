@@ -1,6 +1,6 @@
 ﻿using SnmpDotNet.Exceptions;
 
-namespace SnmpDotNet.AsnType
+namespace SnmpDotNet.Encoding.Types
 {
     public class TValue
     {
@@ -52,7 +52,7 @@ namespace SnmpDotNet.AsnType
 
         public override string? ToString()
         {
-            return $"{this.GetValue()}";
+            return $"{GetValue()}";
         }
     }
 }

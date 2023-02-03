@@ -16,9 +16,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="AsnType\xxx\**" />
-    <EmbeddedResource Remove="AsnType\xxx\**" />
-    <None Remove="AsnType\xxx\**" />
+    <Compile Remove="Encoding\xxx\**" />
+    <EmbeddedResource Remove="Encoding\xxx\**" />
+    <None Remove="Encoding\xxx\**" />
   </ItemGroup>
 
 </Project>
