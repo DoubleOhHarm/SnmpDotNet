@@ -4,7 +4,7 @@ using SnmpDotNet.Protocol;
 
 namespace SnmpDotNet
 {
-	public partial class Snmp
+	public static partial class Snmp
 	{
 		/// <summary>
 		/// 
@@ -39,6 +39,50 @@ namespace SnmpDotNet
 						.ConfigureAwait(false);
 
 					return result.Buffer;
+				}
+				catch (OperationCanceledException)
+				{
+					if (i == retries) throw new Exceptions.SnmpTimeoutException();
+				}
+			}
+
+			return Array.Empty<byte>();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="bytes"></param>
+		/// <param name="ipEndPoint"></param>
+		/// <param name="timeout"></param>
+		/// <param name="retries"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		/// <exception cref="Exceptions.SnmpTimeoutException"></exception>
+		private static byte[] Send(byte[] bytes, IPEndPoint ipEndPoint, TimeSpan timeout, ushort retries, CancellationToken cancellationToken)
+		{
+			if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+			if (ipEndPoint == null) throw new ArgumentNullException(nameof(ipEndPoint));
+
+			using CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			using UdpClient udpClient = new UdpClient();
+
+			//dirty-hack to cancel non-async udpClient methods
+			// ReSharper disable once AccessToDisposedClosure
+			using CancellationTokenRegistration cancellationTokenRegistration = cancellationToken.Register(udpClient.Close);
+
+			for (int i = 0; i <= retries; i++)
+			{
+				try
+				{
+					linkedTokenSource.CancelAfter(timeout);
+					udpClient.Send(bytes, ipEndPoint);
+
+					linkedTokenSource.CancelAfter(timeout);
+					IPEndPoint? remoteEp = null;
+					byte[] result = udpClient.Receive(ref remoteEp);
+
+					return result;
 				}
 				catch (OperationCanceledException)
 				{
